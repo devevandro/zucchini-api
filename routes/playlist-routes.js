@@ -5,13 +5,15 @@ const PlayListModel = require('../models/playlist-model');
 
 router.get('/', async (req, res) => {
     try {
-        const playlists = await PlayListModel.find({}, {
+        const playlist = await PlayListModel.find({}, {
             _id: 1,
             name: 1,
             image: 1,
         }).exec();
 
-        res.json(playlists);
+        res.json({
+            playlists: playlist
+        });
     } catch (err) {
         res.status(500).send({
             error: err,
@@ -67,7 +69,9 @@ router.get('/:id', async (req, res) => {
     try {
         const docPlaylist = await PlayListModel.findById(req.params['id']).exec();
 
-        res.json(docPlaylist);
+        res.json({
+            playlist: docPlaylist,
+        });
     } catch (err) {
         res.status(500).send({
             error: err,
@@ -80,7 +84,9 @@ router.get('/music/:id', async (req, res) => {
     try {
         const docPlaylist = await PlayListModel.findOne({ 'musics._id': req.params['id'] }, { 'musics.$': 1 }).exec();
         
-        res.json(docPlaylist.musics[0]);
+        res.json({
+            music: docPlaylist.musics[0]
+        });
     } catch (err) {
         res.status(500).send({
             error: err,
